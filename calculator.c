@@ -1,66 +1,83 @@
 #include <stdio.h>
-#include <stdlib.h>
 #include <ctype.h>
 #include <string.h>
 
-int main(void)
+int main()
 {
-    char Choose;
+    int num_sub;
+    char sub_names[10][20];
+    int sub_scores[10];
+    char choice;
+
     do
     {
-        double fir_num,sec_num,result;
-        char operator;
-        printf("Enter the first number : ");
-        if(scanf("%lf",&fir_num) != 1)
+        printf("How many subjects do you have? (1-10): ");
+        if (scanf("%d", &num_sub) != 1)
         {
-            printf("Oppos, Incorrect data type, Try again !!\n");
+            printf("Oops, only integer values are allowed.\n");
             while (getchar() != '\n');
             continue;
         }
-        printf("Choose an operator ( + , - , / , *) : ");
-        scanf(" %c", &operator);
+        else if (num_sub <= 0 || num_sub > 10)
+        {
+            printf("Invalid input. Please enter a number between 1 and 10.\n");
+            continue; 
+        }
 
-        printf("Enter the second number : ");
-        if(scanf("%lf",&sec_num) != 1)
+        for (int i = 0; i < num_sub; i++)
         {
-            printf("Oppos, Incorrect data type, Try again !!\n");
-            while (getchar() != '\n');
-            continue;
-        }
-        
-        switch(operator)
-        {
-            case '+':
-                result = fir_num + sec_num;
-                printf("The result is : %.4lf\n",result);
-                break;
-            case '-':
-                result = fir_num - sec_num;
-                printf("The result is : %.4lf\n",result);
-                break;
-            case '/':
-                if(sec_num == 0)
+            printf("Enter the name of subject %d:  ", i + 1);
+
+            // Read input as a string
+            char input[20];
+            scanf("%19s", input);
+
+            // Check if the input is a valid string (contains only letters)
+            int valid = 1;
+            for (int j = 0; input[j] != '\0'; j++)
+            {
+                if (!isalpha(input[j]))
                 {
-                    printf("Error Division by zero is not allowed\n");
-                    
-                }else
-                {
-                    result = fir_num / sec_num;
-                    printf("The result is : %.4lf\n",result);
+                    valid = 0;
                     break;
-                } 
-            case '*':
-                result = fir_num * sec_num;
-                printf("The result is : %.4lf\n",result);
-                break;
-            default:
-                printf("Oppos Only allow (+ , - , / , * )\n");
-                break;
-        }
-        printf("Would you like to calculate more ? answer y/n ");
-        scanf(" %c",&Choose);
+                }
+            }
 
-    }while(Choose == 'Y' || Choose == 'y');
-    printf("GOOD BYE !!");
+            if (!valid)
+            {
+                printf("Invalid input. Please enter a valid subject name.\n");
+                i--; 
+                continue;
+            }
+
+            strcpy(sub_names[i], input);
+
+            printf("Enter the score for subject %d: ", i + 1);
+            scanf("%d", &sub_scores[i]);
+        }
+
+        int total = 0;
+        for (int i = 0; i < num_sub; i++)
+        {
+            total += sub_scores[i];
+        }
+
+        printf("\nSubject Details:\n");
+        for (int i = 0; i < num_sub; i++)
+        {
+            printf("Subject %d: %s, Score: %d\n", i + 1, sub_names[i], sub_scores[i]);
+        }
+
+        printf("The total score for %d subjects is : %d \n", num_sub, total);
+        int avg_mark = total / num_sub; 
+        printf("The average mark for %d subjects is : %d %\n", num_sub, avg_mark);
+
+        printf("Do you want to perform for your friends? (y/n): ");
+        scanf(" %c", &choice);
+    } while (choice == 'Y' || choice == 'y');
+
+
+    printf("Goodbye!!\n");
+
     return 0;
 }
